@@ -75,6 +75,7 @@ class ResponsiveDrawer extends React.Component {
       <div>
         <div className={classes.toolbar}>
           <TextField
+            role="search"
             id="standard-name"
             label="Search Food Restaurant"
             className={classes.textField}

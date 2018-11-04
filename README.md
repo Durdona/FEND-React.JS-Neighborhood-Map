@@ -10,7 +10,12 @@ A single page web application build on react. This application shows near food r
 A new browser window open automatically displaying the app. If it doesn’t, navigate to http://localhost:3000/ in your browser
 **NOTE:** The service workers for this app will only cache the site when it is in production mode.
 
-### 3. Using Resources:
-1) Material UI
-2) Mapbox Map for map 
-3) Foursquare api's
+### 4. How to run the project in Production Mode
+* To create a production build use `npm run build`
+* Navigate to the build directory and start the server with `npm run deploy`
+* This mode includes a Service Worker.
+
+### 5. Using Resources:
+* Material UI
+* Mapbox Map for map 
+* Foursquare api's

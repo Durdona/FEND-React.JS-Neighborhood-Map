@@ -5,13 +5,22 @@ export default class Map extends Component {
   mapContainer;
   mapMarker = [];
   popup = [];
+  state = {
+    error: false
+  }
   
   componentDidMount() {
-    //Calling init map method
-    this.initializeMap();
-
-    //Calling setMarker method
-    this.setMarker();
+    loadScript("https://api.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js").then(val=>{
+      window.mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
+      this.initializeMap();
+      this.setMarker();
+    })
+    .catch(err=> {
+      alert("Something went wrong! map is not loaded")
+      this.setState({
+        error: true
+      })
+    });
   }
 
   //initalizing map
@@ -20,7 +29,7 @@ export default class Map extends Component {
       container: this.mapContainer, // HTML container id
       style: 'mapbox://styles/mapbox/streets-v9', // style URL
       center: [67.0011, 24.8607], // starting position as [lng, lat]
-      zoom: 13
+      zoom: 10
     });
   }
 
@@ -66,25 +75,40 @@ export default class Map extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    this.removeMarker(prevProps.venues)
-    this.setMarker();
-    if (this.props.fly) {
-      //Jump to click item from list
-      this.map.flyTo({
-        center: [this.props.fly.venue.location.lng, this.props.fly.venue.location.lat],
-        zoom: this.map.getZoom() + 1
-      });
-      //Opening popup detail
-      this.openPopup(this.props.fly);
+    if(window.mapboxgl && !this.state.error){
+      this.removeMarker(prevProps.venues)
+      this.setMarker();
+      if (this.props.fly) {
+        //Jump to click item from list
+        this.map.flyTo({
+          center: [this.props.fly.venue.location.lng, this.props.fly.venue.location.lat],
+          zoom: this.map.getZoom() + 1
+        });
+        //Opening popup detail
+        this.openPopup(this.props.fly);
+      }
     }
   }
 
   render() {
     return (
-      <div id="map" ref={el => this.mapContainer = el} aria-label="map"></div>
+      <div id="map" role="application" ref={el => this.mapContainer = el} aria-label="map"></div>
     )
   }
 }
 
 // Load google maps Asynchronously
-window.mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA';
+function loadScript(src) {
+  return new Promise(function(resolve, reject){
+    var script = document.createElement('script');
+    script.src = src;
+    script.crossOrigin = true;
+    script.addEventListener('load', function () {
+      resolve();
+    });
+    script.addEventListener('error', function (e) {
+      reject(e);
+    });
+    document.body.appendChild(script);
+  })
+};

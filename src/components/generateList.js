@@ -8,9 +8,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 export const GenerateList = (props) => {
   let list = props.updateResult;
   return (
-    <List dense={true}>
+    <List role="listbox" dense={true}>
       {list.map((val, key) => {
-        return (<ListItem style={{ cursor: 'pointer' }} key={key} onClick={() => props.onClickHandler(val)}>
+        return (<ListItem tabindex="0" style={{ cursor: 'pointer' }} key={key} onClick={() => props.onClickHandler(val)}>
           <ListItemText
             primary={val.venue.name}
           />
